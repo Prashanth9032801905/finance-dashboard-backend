@@ -1,0 +1,20 @@
+# TEST YOUR LIVE API AFTER DEPLOYMENT
+
+# 1. Health Check
+curl https://finance-dashboard-api.onrender.com/health
+
+# 2. Open Swagger Documentation
+# https://finance-dashboard-api.onrender.com/api-docs
+
+# 3. Test Login
+curl -X POST https://finance-dashboard-api.onrender.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@finance.com","password":"admin123"}'
+
+# 4. Test Protected Endpoint (get JWT token from login first)
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  https://finance-dashboard-api.onrender.com/api/dashboard/summary
+
+# 5. Test Records Endpoint
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  https://finance-dashboard-api.onrender.com/api/records

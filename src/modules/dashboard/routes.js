@@ -211,107 +211,16 @@ router.get('/summary', authenticate, getSummary);
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.get('/monthly', authenticate, authorize('admin', 'analyst'), getMonthlyTrends);
- *                   properties:
- *                     summary:
- *                       $ref: '#/components/schemas/Summary'
- *       401:
- *         description: Unauthorized - token required or invalid
- *       500:
- *         description: Internal server error
- */
-/**
- * @swagger
- * /api/dashboard/summary:
- *   get:
- *     summary: Get financial summary
- *     tags: [Dashboard]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Summary retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 data:
- *                   type: object
- *                   properties:
- *                     summary:
- *                       $ref: '#/components/schemas/Summary'
- *       401:
- *         description: Unauthorized - token required or invalid
- *       500:
- *         description: Internal server error
- */
-router.get('/summary', authenticate, getSummary);
-
-/**
- * @swagger
- * /api/dashboard/monthly:
- *   get:
- *     summary: Get monthly trends (Admin and Analyst only)
- *     tags: [Dashboard]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: year
- *         schema:
- *           type: integer
- *           default: current year
- *         description: Year for monthly trends
- *     responses:
- *       200:
- *         description: Monthly trends retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 data:
- *                   type: object
- *                   properties:
- *                     monthlyTrends:
- *                       type: array
- *                       items:
- *                         $ref: '#/components/schemas/MonthlyTrend'
- *                     year:
- *                       type: integer
- *                       description: Year of the data
- *       401:
- *         description: Unauthorized - token required or invalid
- *       403:
- *         description: Forbidden - analyst or admin access required
- *       500:
- *         description: Internal server error
- */
-router.get('/monthly', authenticate, authorize('admin', 'analyst'), getMonthlyTrends);
 
 /**
  * @swagger
  * /api/dashboard/category:
  *   get:
- *     summary: Get category-wise totals (All roles)
+ *     summary: Get category-wise financial totals
+ *     description: Retrieve financial totals broken down by category
  *     tags: [Dashboard]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: type
- *         schema:
- *           type: string
- *           enum: [income, expense]
- *         description: Filter by transaction type
  *     responses:
  *       200:
  *         description: Category totals retrieved successfully
@@ -322,44 +231,44 @@ router.get('/monthly', authenticate, authorize('admin', 'analyst'), getMonthlyTr
  *               properties:
  *                 success:
  *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
+ *                   example: "Category totals retrieved successfully"
  *                 data:
  *                   type: object
  *                   properties:
  *                     categoryTotals:
  *                       type: array
  *                       items:
- *                         $ref: '#/components/schemas/CategoryTotal'
- *                     overallCategories:
- *                       type: array
- *                       items:
  *                         type: object
  *                         properties:
  *                           category:
  *                             type: string
+ *                             example: "Salary"
+ *                           type:
+ *                             type: string
+ *                             enum: [income, expense]
+ *                             example: "income"
  *                           total:
  *                             type: number
+ *                             example: 5000
  *                           count:
  *                             type: integer
- *                           income:
- *                             type: number
- *                           expense:
- *                             type: number
- *                           balance:
- *                             type: number
+ *                             example: 1
  *       401:
  *         description: Unauthorized - token required or invalid
  *       500:
  *         description: Internal server error
  */
-router.get('/category', authenticate, getCategoryWiseTotals);
+router.get('/category', authenticate, authorize('admin', 'analyst'), getCategoryWiseTotals);
 
 /**
  * @swagger
  * /api/dashboard/recent:
  *   get:
- *     summary: Get recent transactions (All roles)
+ *     summary: Get recent financial transactions
+ *     description: Retrieve the most recent financial transactions
  *     tags: [Dashboard]
  *     security:
  *       - bearerAuth: []
@@ -370,7 +279,7 @@ router.get('/category', authenticate, getCategoryWiseTotals);
  *           type: integer
  *           minimum: 1
  *           maximum: 50
- *           default: 5
+ *           default: 10
  *         description: Number of recent transactions to retrieve
  *     responses:
  *       200:
@@ -382,18 +291,20 @@ router.get('/category', authenticate, getCategoryWiseTotals);
  *               properties:
  *                 success:
  *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
+ *                   example: "Recent transactions retrieved successfully"
  *                 data:
  *                   type: object
  *                   properties:
- *                     recentTransactions:
+ *                     transactions:
  *                       type: array
  *                       items:
  *                         $ref: '#/components/schemas/Record'
- *                     limit:
+ *                     count:
  *                       type: integer
- *                       description: Number of transactions returned
+ *                       example: 10
  *       401:
  *         description: Unauthorized - token required or invalid
  *       500:
@@ -405,10 +316,18 @@ router.get('/recent', authenticate, getRecentTransactions);
  * @swagger
  * /api/dashboard/yearly-comparison:
  *   get:
- *     summary: Get yearly comparison (Admin and Analyst only)
+ *     summary: Get yearly financial comparison
+ *     description: Retrieve year-over-year financial comparison data
  *     tags: [Dashboard]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: years
+ *         schema:
+ *           type: string
+ *           pattern: '^(20[2-9][0-9],?)+$'
+ *         description: Comma-separated list of years to compare
  *     responses:
  *       200:
  *         description: Yearly comparison retrieved successfully
@@ -419,53 +338,32 @@ router.get('/recent', authenticate, getRecentTransactions);
  *               properties:
  *                 success:
  *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
+ *                   example: "Yearly comparison retrieved successfully"
  *                 data:
  *                   type: object
  *                   properties:
  *                     comparison:
- *                       type: object
- *                       properties:
- *                         lastYear:
- *                           type: object
- *                           properties:
- *                             income:
- *                               type: number
- *                             expense:
- *                               type: number
- *                             total:
- *                               type: number
- *                         currentYear:
- *                           type: object
- *                           properties:
- *                             income:
- *                               type: number
- *                             expense:
- *                               type: number
- *                             total:
- *                               type: number
- *                     growth:
- *                       type: object
- *                       properties:
- *                         income:
- *                           type: number
- *                           description: Income growth percentage
- *                         expense:
- *                           type: number
- *                           description: Expense growth percentage
- *                         total:
- *                           type: number
- *                           description: Total growth percentage
- *                     years:
  *                       type: array
  *                       items:
- *                         type: integer
- *                       description: Years compared
+ *                         type: object
+ *                         properties:
+ *                           year:
+ *                             type: integer
+ *                             example: 2024
+ *                           totalIncome:
+ *                             type: number
+ *                             example: 11500
+ *                           totalExpense:
+ *                             type: number
+ *                             example: 3550
+ *                           balance:
+ *                             type: number
+ *                             example: 7950
  *       401:
  *         description: Unauthorized - token required or invalid
- *       403:
- *         description: Forbidden - analyst or admin access required
  *       500:
  *         description: Internal server error
  */
