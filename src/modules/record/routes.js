@@ -106,7 +106,7 @@ const {
  *               date:
  *                 type: string
  *                 format: date
- *                 description: Transaction date (ISO format)
+ *                 description: Transaction date in ISO format
  *               note:
  *                 type: string
  *                 maxLength: 200
@@ -191,14 +191,14 @@ router.post('/', authenticate, authorize('admin'), validate(createRecordSchema),
  *           type: string
  *           format: date
  *           example: "2024-01-01"
- *         description: Filter by start date (ISO format: YYYY-MM-DD)
+ *         description: Filter by start date in ISO format (YYYY-MM-DD)
  *       - in: query
  *         name: endDate
  *         schema:
  *           type: string
  *           format: date
  *           example: "2024-12-31"
- *         description: Filter by end date (ISO format: YYYY-MM-DD)
+ *         description: Filter by end date in ISO format (YYYY-MM-DD)
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -214,7 +214,7 @@ router.post('/', authenticate, authorize('admin'), validate(createRecordSchema),
  *           enum: [asc, desc]
  *           default: desc
  *           example: "desc"
- *         description: Sort order (ascending or descending)
+ *         description: Sort order ascending or descending
  *     responses:
  *       200:
  *         description: Records retrieved successfully
@@ -403,7 +403,7 @@ router.get('/:id', authenticate, getRecordById);
  *               date:
  *                 type: string
  *                 format: date
- *                 description: Transaction date (ISO format)
+ *                 description: Transaction date in ISO format
  *               note:
  *                 type: string
  *                 maxLength: 200
