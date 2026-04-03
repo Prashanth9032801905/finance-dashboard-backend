@@ -39,6 +39,7 @@ app.use(cors({
     'http://127.0.0.1:5000',
     'http://127.0.0.1:59156',
     'https://finance-dashboard-api.onrender.com',
+    'https://finance-dashboard-backend-uwj9.onrender.com',
     'https://*.onrender.com',
     'chrome-error://chromewebdata/',
     'chrome://chromewebdata/'
