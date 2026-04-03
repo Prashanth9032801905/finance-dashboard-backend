@@ -2,6 +2,13 @@
 
 A comprehensive, industry-level Finance Dashboard Backend API built with Node.js, Express, and MongoDB. This system provides complete financial record management with authentication, role-based access control, and advanced analytics.
 
+## 🌐 **Live Demo & Documentation**
+
+- **📚 API Documentation**: [Swagger UI](https://finance-dashboard-api.onrender.com/api-docs)
+- **🔗 GitHub Repository**: [View on GitHub](https://github.com/YOUR_USERNAME/finance-dashboard-backend)
+- **🚀 Live API**: [https://finance-dashboard-api.onrender.com](https://finance-dashboard-api.onrender.com)
+- **🏥 Health Check**: [https://finance-dashboard-api.onrender.com/health](https://finance-dashboard-api.onrender.com/health)
+
 ## 🚀 Features
 
 ### Core Features
